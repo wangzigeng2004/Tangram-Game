@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="32dp"
-        android:text="Tangram"
+        android:text="七巧板"
         android:textSize="70sp"
         android:textStyle="bold"
         android:typeface="normal"

@@ -1,23 +1,23 @@
 <resources>
-    <string name="app_name">Tangram</string>
-    <string name="bt_comenzar">Comenzar</string>
-    <string name="tv_txt_figuras_completadas">Figuras\ncompletadas</string>
+    <string name="app_name">七巧板</string>
+    <string name="bt_comenzar">开始</string>
+    <string name="tv_txt_figuras_completadas">数字/完成</string>
     <string name="tv_n_figuras_completadas">0</string>
-    <string name="tv_ultima_figura">¡Has llegado al final del juego!</string>
-    <string name="tv_txt_puntos">Puntos</string>
+    <string name="tv_ultima_figura">你已经完成了比赛!</string>
+    <string name="tv_txt_puntos">分值</string>
     <string name="tv_n_puntos">100</string>
-    <string name="tv_segundos">0 segundos</string>
-    <string name="tv_piezas_faltan">Faltan: 0 piezas</string>
-    <string name="tv_txt_nivel">Nivel</string>
+    <string name="tv_segundos">0 秒</string>
+    <string name="tv_piezas_faltan">缺少: 0 个</string>
+    <string name="tv_txt_nivel">数量</string>
     <string name="tv_n_nivel">1</string>
-    <string name="bt_siguiente">siguiente figura</string>
-    <string name="tv_texto_figura">Casa</string>
-    <string name="tv_instrucciones_encabezado">Reglas</string>
+    <string name="bt_siguiente">下一个数字</string>
+    <string name="tv_texto_figura">家</string>
+    <string name="tv_instrucciones_encabezado">规则</string>
     <string name="tv_instrucciones">
-        Toca y arrastra cada pieza al lugar donde crees que puede encajar. Cada pieza encaja en un solo hueco, aunque haya piezas del mismo tamaño.\n
-        \nSi sueltas la pieza en el lugar correcto ganas 10 puntos, si es incorrecto pierdes 10 puntos.\n
-        \nAl completar una figura entera ganas 50 puntos, y cada 3 figuras completadas subes un nivel.
+       触摸并将每一块都拖到你认为适合的地方。每个零件都适合一个孔，即使有相同大小的零件。\n
+ 如果你在正确的地方松了一块，你会得到10分，如果不正确，你会失去10分。\n
+ 完成一个完整的数字你会得到50分，每完成3个数字你就会提高一个水平
     </string>
-    <string name="bt_jugar">Jugar</string>
-    <string name="tv_siguiente">Desliza el dedo sobre la pantalla para pasar a la siguiente figura</string>
+    <string name="bt_jugar">玩</string>
+    <string name="tv_siguiente">手指在屏幕上滑动到下一个图形</string>
 </resources>

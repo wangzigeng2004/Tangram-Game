@@ -1,16 +1,16 @@
 package com.dawmi2.tangramv6;
 
 public class Figura {
-    private String nombreFigura;
-    private int figuraSilueta;
-    private int figuraColores;
-    private int pieza1;
-    private int pieza2;
-    private int pieza3;
-    private int pieza4;
-    private int pieza5;
-    private int pieza6;
-    private int pieza7;
+    private final String nombreFigura;
+    private final int figuraSilueta;
+    private final int figuraColores;
+    private final int pieza1;
+    private final int pieza2;
+    private final int pieza3;
+    private final int pieza4;
+    private final int pieza5;
+    private final int pieza6;
+    private final int pieza7;
 
     public Figura(String nombreFigura, int figuraSilueta, int figuraColores, int pieza1, int pieza2, int pieza3, int pieza4, int pieza5, int pieza6, int pieza7) {
         this.nombreFigura = nombreFigura;

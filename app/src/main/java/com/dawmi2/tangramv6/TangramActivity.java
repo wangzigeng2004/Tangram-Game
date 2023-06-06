@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
@@ -25,13 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TangramActivity extends AppCompatActivity implements
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener {
 
-    // botones y textos
-    private ImageButton ib_info;
     private Button bt_siguienteFigura;
     private TextView tv_puntuacion;
     private TextView tv_nivel;
@@ -41,11 +41,12 @@ public class TangramActivity extends AppCompatActivity implements
     // imagenes
     private ImageView piezaTangram1, piezaTangram2,piezaTangram3, piezaTangram4, piezaTangram5, piezaTangram6, piezaTangram7;
     private ImageView piezaFigura1, piezaFigura2, piezaFigura3, piezaFigura4, piezaFigura5, piezaFigura6, piezaFigura7;
-    private ImageView tangramColores, figuraSilueta, figuraColores;
+    private ImageView figuraSilueta;
+    private ImageView figuraColores;
 
     // objetos
     private Figura figura1casa, figura2avion;
-    private ArrayList <Figura> listaFiguras = new ArrayList<>();
+    private final ArrayList <Figura> listaFiguras = new ArrayList<>();
 
     // variables funcionales, acumuladores y contadores
     private TextView textoFigura;
@@ -55,7 +56,7 @@ public class TangramActivity extends AppCompatActivity implements
     private int figurasCompletadas;
     private int puntuacion;
     private int nivel;
-    private ArrayList<String> listaPiezasColocadas =  new ArrayList<>();
+    private final ArrayList<String> listaPiezasColocadas =  new ArrayList<>();
 
     // sonidos
     private MediaPlayer sonidoTap;
@@ -85,7 +86,8 @@ public class TangramActivity extends AppCompatActivity implements
         detectorGestos.setOnDoubleTapListener(this);
 
         //inflamos botones y textos
-        ib_info = findViewById(R.id.ib_info);
+        // botones y textos
+        ImageButton ib_info = findViewById(R.id.ib_info);
         //bt_siguienteFigura = findViewById(R.id.bt_siguiente);
         //bt_siguienteFigura.setVisibility(View.INVISIBLE);
         textoFigura = findViewById(R.id.tv_texto_figura);
@@ -116,7 +118,7 @@ public class TangramActivity extends AppCompatActivity implements
         piezaFigura7 = findViewById(R.id.iv_figura_pieza7);
 
         //imagenes tangram y figuras
-        tangramColores = findViewById(R.id.iv_tangram_colores);
+        ImageView tangramColores = findViewById(R.id.iv_tangram_colores);
         figuraSilueta = findViewById(R.id.iv_figura_silueta);
         figuraColores = findViewById(R.id.iv_figura_colores);
 
@@ -132,7 +134,7 @@ public class TangramActivity extends AppCompatActivity implements
         //
         // casa
         listaFiguras.add(new Figura(
-                "Casa",
+                "家",
                 R.drawable.ic_figcasasilueta,
                 R.drawable.ic_figcasacolores,
                 R.drawable.casa_pieza1300px,
@@ -144,7 +146,7 @@ public class TangramActivity extends AppCompatActivity implements
                 R.drawable.casa_pieza7300px));
         // avion
         listaFiguras.add(new Figura(
-                "Avión",
+                "飞机",
                 R.drawable.ic_figavionsilueta,
                 R.drawable.ic_figavioncolores,
                 R.drawable.fig_avion_p1300px,
@@ -156,7 +158,7 @@ public class TangramActivity extends AppCompatActivity implements
                 R.drawable.fig_avion_p7300px));
         // vela
         listaFiguras.add(new Figura(
-                "Vela",
+                "蜡烛",
                 R.drawable.ic_figvelasilueta,
                 R.drawable.ic_figvelacolores,
                 R.drawable.fig_vela_p1,
@@ -168,7 +170,7 @@ public class TangramActivity extends AppCompatActivity implements
                 R.drawable.fig_vela_p7));
         // helicoptero
         listaFiguras.add(new Figura(
-                "Helicóptero",
+                "直升机",
                 R.drawable.ic_fighelicopsilueta,
                 R.drawable.ic_fighelicopcolores,
                 R.drawable.fig_helicoptero_p1,
@@ -180,7 +182,7 @@ public class TangramActivity extends AppCompatActivity implements
                 R.drawable.fig_helicoptero_p7));
         // cohete
         listaFiguras.add(new Figura(
-                "Cohete",
+                "火箭",
                 R.drawable.ic_figcohetesilueta,
                 R.drawable.ic_figcohetecolores,
                 R.drawable.fig_cohete_p1,
@@ -192,7 +194,7 @@ public class TangramActivity extends AppCompatActivity implements
                 R.drawable.fig_cohete_p7));
         // barco
         listaFiguras.add(new Figura(
-                "Barco",
+                "船",
                 R.drawable.ic_figbarcosilueta,
                 R.drawable.ic_figbarcocolores,
                 R.drawable.fig_barco_p1,
@@ -396,31 +398,37 @@ public class TangramActivity extends AppCompatActivity implements
             final int evY = (int) event.getY();
 
             //dependiendo de la acción...AUNQUE AQUI SOLO TENEMOS ACCION DE ARRASTRAS
-            switch (action){
-                case DragEvent.ACTION_DRAG_STARTED:
-                    // CUANDO COMIENZA LA ACCIÓN DE ARRASTRAR
-                    // SE COMPRUEBA QUE HAY CONTENIDO QUE ARRASTRAR
-                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)){
+            if (action == DragEvent.ACTION_DRAG_STARTED) {// CUANDO COMIENZA LA ACCIÓN DE ARRASTRAR
+                // SE COMPRUEBA QUE HAY CONTENIDO QUE ARRASTRAR
+                if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
 
-                        // cogemos una muestra del color del pixel del view sobre el que está el puntero
-                        // en el momento de iniciar la acción de arrastrar
-                        int touchColor = muestraDeColor(v.getId(), evX, evY);
+                    // cogemos una muestra del color del pixel del view sobre el que está el puntero
+                    // en el momento de iniciar la acción de arrastrar
+                    int touchColor = muestraDeColor(v.getId(), evX, evY);
 
-                        // la herramientaColor compara la muestra de color obtenida de la imagen, con un test de color RGB (compruebaMuestra())
-                        // el test de color contempla una tolerancia de 25, por las posibles variaciones de color causadas al escalar y variar la densidad de píxeles.
-                        HerramientaColor ct = new HerramientaColor();
-                        String colorMatch = "";
-                        // EXTRAYENDO EL COLOR DONDE SE HA PULSADO, GUARDAMOS EL COLOR DE LA PIEZA ARRASTRADA
-                        if (ct.compruebaMuestra(Color.GREEN, touchColor)){ colorViewClickada="GREEN";}
-                        else if (ct.compruebaMuestra(Color.CYAN, touchColor)){ colorViewClickada="CYAN";}
-                        else if (ct.compruebaMuestra(Color.RED, touchColor)){ colorViewClickada="RED";}
-                        else if (ct.compruebaMuestra(Color.BLACK, touchColor)){ colorViewClickada="BLACK";}
-                        else if (ct.compruebaMuestra(Color.BLUE, touchColor)){ colorViewClickada="BLUE";}
-                        else if (ct.compruebaMuestra(Color.MAGENTA, touchColor)){ colorViewClickada="MAGENTA";}
-                        else if (ct.compruebaMuestra(Color.YELLOW, touchColor)){ colorViewClickada="YELLOW";}
-                        return true;
+                    // la herramientaColor compara la muestra de color obtenida de la imagen, con un test de color RGB (compruebaMuestra())
+                    // el test de color contempla una tolerancia de 25, por las posibles variaciones de color causadas al escalar y variar la densidad de píxeles.
+                    HerramientaColor ct = new HerramientaColor();
+                    String colorMatch = "";
+                    // EXTRAYENDO EL COLOR DONDE SE HA PULSADO, GUARDAMOS EL COLOR DE LA PIEZA ARRASTRADA
+                    if (ct.compruebaMuestra(Color.GREEN, touchColor)) {
+                        colorViewClickada = "GREEN";
+                    } else if (ct.compruebaMuestra(Color.CYAN, touchColor)) {
+                        colorViewClickada = "CYAN";
+                    } else if (ct.compruebaMuestra(Color.RED, touchColor)) {
+                        colorViewClickada = "RED";
+                    } else if (ct.compruebaMuestra(Color.BLACK, touchColor)) {
+                        colorViewClickada = "BLACK";
+                    } else if (ct.compruebaMuestra(Color.BLUE, touchColor)) {
+                        colorViewClickada = "BLUE";
+                    } else if (ct.compruebaMuestra(Color.MAGENTA, touchColor)) {
+                        colorViewClickada = "MAGENTA";
+                    } else if (ct.compruebaMuestra(Color.YELLOW, touchColor)) {
+                        colorViewClickada = "YELLOW";
                     }
-                    return false;
+                    return true;
+                }
+                return false;
             }
             return false;
         }
@@ -428,6 +436,7 @@ public class TangramActivity extends AppCompatActivity implements
 
     //QUÉ OCURRE CUANDO SE SUELTA UNA PIEZA ARRASTRADA
     private class MiEscuchadorDrop implements View.OnDragListener {
+        @SuppressLint("SetTextI18n")
         @Override
         public boolean onDrag(View v, DragEvent event) {
             //recogemos del evento la acción realizada
@@ -441,10 +450,7 @@ public class TangramActivity extends AppCompatActivity implements
             switch (action){
                 // EMPIEZA LA ACCIÓN DE ARRASTRAR
                 case DragEvent.ACTION_DRAG_STARTED:
-                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)){
-                        return true;
-                    }
-                    return false;
+                    return event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN);
                 // SE SUELTA
                 case DragEvent.ACTION_DROP:
                     // cogemos una muestra del color del pixel del view sobre el que está el puntero
@@ -467,11 +473,11 @@ public class TangramActivity extends AppCompatActivity implements
                 // AL TERMINAR LA ACCIÓN DE SOLTAR...
                 case DragEvent.ACTION_DRAG_ENDED:
                     // COMPARAMOS EL COLOR DE LA PIEZA ARRASTRADA CON EL COLOR DE LA PIEZA OCULTA DONDE SE SUELTA
-                    if(colorViewClickada == colorViewSoltada){
+                    if(Objects.equals(colorViewClickada, colorViewSoltada)){
                         // SONIDO
                         sonidoPiezaBien.start();
                         // SI ES CORRECTO...
-                        Toast.makeText(TangramActivity.this, "¡PIEZA COLOCADA CORRECTAMENTE!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TangramActivity.this, "放置完全正确!", Toast.LENGTH_SHORT).show();
                         // Y DEPENDIENDO DEL COLOR, SE OCULA UNA PIEZA Y SE MUESTRA LA OTRA
                         switch (colorViewClickada) {
                             case "MAGENTA":
@@ -519,7 +525,7 @@ public class TangramActivity extends AppCompatActivity implements
                             // SONIDO
                             sonidoFiguraBien.start();
                             figurasCompletadas++;
-                            Toast.makeText(TangramActivity.this, "¡GENIAL! ¡HAS COMPLETADO LA FIGURA!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(TangramActivity.this, "太棒了！你已经完成了这个数字!", Toast.LENGTH_LONG).show();
                             // SI NO ESTAMOS EN LA ÚLTIMA FIGURA...
                             if (indiceFiguras < listaFiguras.size()-1){
                                 // MOSTRAMOS BOTÓN DE SIGUIENTE
@@ -536,7 +542,7 @@ public class TangramActivity extends AppCompatActivity implements
                         sonidoPiezaMal.start();
                         puntuacion -= 10;
                         tv_puntuacion.setText(Integer.toString(puntuacion));
-                        Toast.makeText(TangramActivity.this, "ESE NO ES SU SITIO... ¡PRUEBA OTRA VEZ!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TangramActivity.this, "那不是他的地方。。。再次尝试!", Toast.LENGTH_SHORT).show();
                     }
                     return true;
             }
@@ -573,6 +579,7 @@ public class TangramActivity extends AppCompatActivity implements
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void cambiarFigura() {
         // SONIDO
         sonidoCambiaSiguiente.start();
@@ -614,5 +621,27 @@ public class TangramActivity extends AppCompatActivity implements
         piezaTangram5.setVisibility(View.VISIBLE);
         piezaTangram6.setVisibility(View.VISIBLE);
         piezaTangram7.setVisibility(View.VISIBLE);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideBottomUIMenu();
+    }
+
+    /**
+     * 隐藏虚拟按键，并且全屏
+     */
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 }
